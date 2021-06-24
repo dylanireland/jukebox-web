@@ -1,0 +1,213 @@
+{% load static %}
+{% load tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Jukebox</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+    @font-face {
+      font-family: 'Alata'; /* IE9 Compat Modes */
+      src: url("{% static 'fonts/alata-regular.ttf' %}") format('truetype'); /* Safari, Android, iOS */
+    }
+    </style>
+    <!-- favicons -->
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+      <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
+      <link rel="mask-icon" href="{% static 'favicons/safari-pinned-tab.svg' %}" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#00aba9">
+      <meta name="theme-color" content="#ffffff">
+    <!-- end favi -->
+  </head>
+  <body style="font-family: 'Alata', Fallback, sans-serif;">
+
+
+    <div id="homeBanner">
+      <header class="header">
+  		  <h1 class="logo"><a href="/" style="font-size: 2rem;"><img src="{% static 'photos/logo.svg' %}" alt="Jukebox Logo"><div id="jukeboxName">Jukebox</div></a></h1>
+        <ul class="main-nav">
+          <li><a href="app" target="_blank">Launch App</a></li>
+          <li><a href="#">Whitepaper</a></li>
+        </ul>
+  	   </header>
+      <div class="container homeContainer" style="">
+
+        <div class="row desktopVisible">
+          <div class="col-6">
+            <div id="forwardFacingDiv">
+              <h1>Jukebox<h1>
+              <h2>The world's first decentralized radio station, powered by the Ethereum blockchain<h2>
+            </div>
+          </div>
+          <div class="col-6">
+            <img id=logoWithExtrasHome src="{% static 'photos/logoWithExtras.svg' %}" alt="Jukebox Logo with Blockchain">
+            <button id="learnMore" onclick="window.location.href='#play';">Learn More</button>
+          </div>
+        </div>
+
+        <div class="mobileVisible">
+          <div>
+            <h1>Jukebox<h1>
+            <img id=logoWithExtrasHome src="{% static 'photos/logoWithExtras.svg' %}" alt="Jukebox Logo with Blockchain">
+          </div>
+          <div>
+            <div id="forwardFacingDiv">
+              <h2>The world's first decentralized radio station, powered by the Ethereum blockchain<h2>
+            </div>
+          </div>
+          <button id="learnMore" onclick="window.location.href='#play';">Learn More</button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div id="play">
+      <div class="container" style="margin: auto; padding: 0;">
+
+        <div class="row desktopVisible" style="margin-left: -75px; margin-right: -75px;">
+          <div class="col-6" style="padding-right: 50px;">
+            <h1 style="font-size: 4rem;">Play any Song for the World to Hear</h1>
+            <p>Jukebox is a public, decentralized streaming application with a single queue of songs that anyone may add to. Add a song on the <a href="app" class="colorfulLink">Jukebox dApp</a>
+               and everyone listening during your time slot will hear it. Fees for adding songs are calculated in USD, paid in Ether, and grow in price with the length of queue to balance supply and demand <a href="economics" class="colorfulLink">Economics</a></p>
+          </div>
+          <div class="col-6" style="text-align: center; padding-left: 0;">
+            <img id="coverchain" src="{% static 'photos/coverchain.png' %}" alt="Blockchain of Cover Art">
+          </div>
+        </div>
+
+        <div class="mobileVisible">
+          <div>
+            <h1>Play any Song for the World to Hear</h1>
+            <p>Jukebox is a public, decentralized streaming application with a single queue of songs that anyone may add to. Add a song on the <a href="app" class="colorfulLink">Jukebox dApp</a>
+               and everyone listening during your time slot will hear it. Fees for adding songs are calculated in USD, paid in Ether, and grow in price with the length of queue to balance supply and demand <a href="economics" class="colorfulLink">Economics</a></p>
+          </div>
+          <div>
+            <img id="coverchain" style="width: 100%;" src="{% static 'photos/coverchain.png' %}" alt="Blockchain of Cover Art">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="listen">
+      <div>
+        <h1>Listen for Free<br>Anytime,<br class="mobileBR"> Anywhere</h1>
+        <div>
+          <p>Visit the <a href="app" class="colorfulLink">Jukebox dApp</a> to listen to an infinite queue of music, selected by countless individuals like you.<br>Easy, Seamless, and Free.</p>
+          <div id="desktopQueue">
+            <table>
+              <div style="border: 1px solid black; border-bottom: 0px;">
+                <h4 style="margin: 0; padding: 5px 0px 5px 0px; color: red;">Live Queue<div class="blob red"></h4></div>
+              </div>
+              <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Publisher</th>
+                <th>Starting Block</th>
+                <th>Ending Block</th>
+              </tr>
+              {% for sng in queue %}
+                <tr>
+                  <td>{{ sng.title }}</td>
+                  <td>{{ sng.artist }}</td>
+                  <td><a href="https://etherscan.io/address/{{ song.publisher }}" target="_blank">{{ sng.publisher|makeShorterAddy }}</td>
+                  <td>{{ sng.start }}</td>
+                  <td>{{ sng.end }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+            <div style="border: 1px solid black; border-top: 0px;">
+              <a href="queue" class="colorfulLink" style="margin: 0; padding: 5px 0px 5px 0px;">View Full Queue</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobileQueue">
+      <table>
+        <div style="border: 1px solid black; border-bottom: 0px;">
+          <h4 style="margin: 0; padding: 5px 0px 5px 0px; color: red;">Live Queue<div class="blob red"></h4></div>
+        </div>
+        <tr>
+          <th>Title</th>
+          <th>Artist</th>
+          <th>Publisher</th>
+          <th>Starting Block</th>
+          <th>Ending Block</th>
+        </tr>
+        {% for sng in queue %}
+          <tr>
+            <td>{{ sng.title }}</td>
+            <td>{{ sng.artist }}</td>
+            <td><a href="https://etherscan.io/address/{{ song.publisher }}" target="_blank">{{ sng.publisher|makeShorterAddy }}</td>
+            <td>{{ sng.start }}</td>
+            <td>{{ sng.end }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      <div style="border: 1px solid black; border-top: 0px;">
+        <a href="queue" class="colorfulLink" style="margin: 0; padding: 5px 0px 5px 0px;">View Full Queue</a>
+      </div>
+    </div>
+
+    <div id="faq">
+      <div style="text-align: center">
+        <h1>FAQ</h1>
+      </div>
+      <div class="container">
+        {% autoescape off %}
+          {% for q, v in faq %}
+            <div class="row">
+              <div class="col-6">
+                <h3>{{ q }}</h3>
+              </div>
+              <div class="col-6">
+                <p>{{ v }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        {% endautoescape %}
+      </div>
+    </div>
+    <div id="roadMap" style="margin-bottom: 100px;">
+      <div style="text-align: center;">
+        <h1>Roadmap</h1>
+      </div>
+      <div class="timeline">
+        <div class="containertime left">
+          <div class="content">
+            <h2>Jukebox v1 Mainnet Launch</h2>
+            <year>2021</year>
+            <p>Jukebox will be launched on the Ethereum Mainnet soon!
+          </div>
+        </div>
+        <div class="containertime right">
+          <div class="content">
+            <h2>Jukebox v2</h2>
+            <year>2022</year>
+            <p>Jukebox v2 will feature significant upgrades including the JUK token and NFT based time slots that can be bought and sold. See <a href="app" class="colorfulLink">Future Work</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js" integrity="sha512-TTGImODeszogiro9DUvleC9NJVnxO6M0+69nbM3YE9SYcVe4wZp2XYpELtcikuFZO9vjXNPyeoHAhS5DHzX1ZQ==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/truffle-contract@4.0.31/dist/truffle-contract.js"></script>
+    <script type="module" src="js/app.js"></script>
+
+
+  </body>
+</html>

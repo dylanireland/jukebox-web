@@ -1,0 +1,438 @@
+{% load static %}
+{% load tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Jukebox</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+    @font-face {
+      font-family: 'Alata'; /* IE9 Compat Modes */
+      src: url("{% static 'fonts/alata-regular.ttf' %}") format('truetype'); /* Safari, Android, iOS */
+    }
+    </style>
+
+    <!-- favicons -->
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+      <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
+      <link rel="mask-icon" href="{% static 'favicons/safari-pinned-tab.svg' %}" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#00aba9">
+      <meta name="theme-color" content="#ffffff">
+    <!-- end favi -->
+  </head>
+  <body style="font-family: 'Alata', Fallback, sans-serif;">
+    <header class="header">
+		  <h1 class="logo"><a href="/"><img src="{% static 'photos/logo.svg' %}" alt="Jukebox Logo"><div id="jukeboxName">Jukebox</div></a></h1>
+      <ul class="main-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="#" id="enableEthereumButton">Connect With Metamask<img id="metamaskLogo" src="{% static 'photos/metamaskBlack.svg' %}" alt="White MetaMask Logo"></a></li>
+        <li id="addSongLiWrapper" onclick="openModalRouter();" style="position: relative"><a id="addASongHeaderButton">Add a Song</a>
+          <div id="loaderCont" class="loaderCont">
+            <div id="loader" class="loader"></div>
+          </div>
+        </li>
+      </ul>
+	   </header>
+    <div id="blockNumberWrapper">
+      <h1 id="blockNumberView">Block Number: {{ blockNumber }}</h1>
+    </div>
+
+    <div class="toast" id="notification" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img id="toastImg" src="" class="rounded me-2">
+        <strong id="toastTitle" class="me-auto"></strong>
+        <small><a id="toTxAddSong"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastBody"></div>
+    </div>
+
+    <div id="checkSongPopup" class="modal">
+      <div class="modal-content">
+        <div>
+          <div id="checkOnSongLoaderCont" class="loaderCont">
+            <div id="checkOnSongLoader" class="loader"></div>
+          </div>
+          <h1>Transaction Pending</h1>
+          <a id="toTxCheckSong">
+            <i class="bi-box-arrow-up-right sexyglyph"></i>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="addSongPopup" class="modal">
+      <div class="modal-content">
+        <div style="text-align: right;">
+          <h4 class="close">&times;</h4>
+        </div>
+        <div style="text-align: center; margin-top: -2%;">
+          <h1>Add a Song</h1>
+          <form id="addSongForm" action="#" method="post">
+            {% csrf_token %}
+            <div class="container">
+              <div class="row">
+                <div class="col-6" style="padding-left: 0;">
+                  {{ form.title }}
+                </div>
+                <div class="col-6" style="padding-right: 0;">
+                  {{ form.artist }}
+                </div>
+                {{ form.url }}
+                <p>You may enter the url of any MP3 file hosted online. You may also add the link of a YouTube video to be converted to audio.</p>
+                {{ form.coverUrl }}
+                <p>Please enter the url of the cover image for this track. Base64 encoded images are not supported.</p>
+                {{ form.duration }}
+                <div>
+                  <p style="margin-bottom: 10px;">Please enter the duration in number of blocks. You may want to round up to ensure the entirity of your song is heard. Some blocks are mined sooner and later than others. The average block time is <b>13s</b></p>
+                  <p>The queue is currently <b id="queueDepthLabel"></b> songs long. The price for adding a song at this queue length is <b id="queueLengthPrice"></b></p>
+                  <p>Your song is <b id="activeDuration">0</b> blocks long. The price for this duration is <b id="activeDurationPrice">Ξ0</b><a href="faq" style="padding-left: 30px;">Fee Pricing</a></p>
+
+                  <p>Your total fee is <b id="totalFeeLabel"></b></p>
+                  <div style="position: relative;">
+                    <input type="submit" id="submitAddSong" value="Submit"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container baseContainerBackground">
+      <div>
+        <div class="row">
+          <div class="col-6">
+            <div id="contentView">
+              <div id="visibleContent">
+                <div id="titleView">
+                  <div id="startBlockView">Start<br>{{ song.start }}</div>
+                  <div id="songNameView"><h1>{{ song.title }}</h1></div>
+                  <div id="endBlockView">End<br>{{ song.end }}</div>
+                </div>
+                {% if song.end != 0 %}
+                  <div id="durationProgress">
+                    <div id="progressBar"></div>
+                  </div>
+                {% else %}
+                  <button id="addASong">Add a Song</button>
+                {% endif %}
+
+                <div class="albumBase">
+                  <div class="container albumFrame">
+                  </div>
+                </div>
+                <h3>Artist: {{ song.artist }}</h3>
+                <h4>Publisher: <a href="https://etherscan.io/address/{{ publisherAddress }}" target="_blank">{{ song.publisher|makeShorterAddy }}</a></h4>
+                <audio controls autoplay>
+                  <source src="{% static "" %}{{ song.url }}" type="audio/mp3">
+                </audio>
+              </div>
+            </div>
+          </div>
+          <div class="col-6" style="text-align: center; padding: 10px 10px 10px 10px;">
+            <table style="width: 100%;">
+              <div style="border: 1px solid black; border-bottom: 0px;">
+                <h4 style="margin: 0; padding: 5px 0px 5px 0px;">Queue</h4>
+              </div>
+              <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Publisher</th>
+                <th>Starting Block</th>
+                <th>Ending Block</th>
+              </tr>
+              {% for sng in queue %}
+                <tr>
+                  <td>{{ sng.title }}</td>
+                  <td>{{ sng.artist }}</td>
+                  <td><a href="https://etherscan.io/address/{{ song.publisher }}" target="_blank">{{ sng.publisher|makeShorterAddy }}</td>
+                    <td>{{ sng.start }}</td>
+                    <td>{{ sng.end }}</td>
+                  </tr>
+              {% endfor %}
+            </table>
+            <div style="border: 1px solid black; border-top: 0px;">
+              <a href="queue" style="margin: 0; padding: 5px 0px 5px 0px;">View Full Queue</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js" integrity="sha512-TTGImODeszogiro9DUvleC9NJVnxO6M0+69nbM3YE9SYcVe4wZp2XYpELtcikuFZO9vjXNPyeoHAhS5DHzX1ZQ==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/truffle-contract@4.0.31/dist/truffle-contract.js"></script>
+
+    <!-- Back to Normal, Completed transaction -->
+    <script>
+    function back2Normal() {
+      document.getElementById("addSongPopup").style.display = "none";
+      document.getElementById("checkSongPopup").style.display = "none";
+      document.getElementById("addASongHeaderButton").innerHTML = "Add a Song";
+      $("#addSongLiWrapper").css("padding-left", "inherit");
+      $("#addSongLiWrapper").css("padding-right", "inherit");
+      $("#loaderCont").css("visibility", "hidden");
+    }
+    </script>
+
+    <!-- Notification Firer -->
+    <script>
+      function fireToast(title, message, src) {
+        var option = { animation: true, delay: 6000 };
+        var notification = document.getElementById("notification");
+        var toastTitle = document.getElementById("toastTitle");
+        var toastBody = document.getElementById("toastBody");
+        var toastImg = document.getElementById("toastImg")
+        const str = "/static/photos/" + src;
+        toastImg.src = str;
+        toastTitle.innerHTML = title;
+        toastBody.innerHTML = message;
+        var toast = new bootstrap.Toast(notification, option);
+        toast.show();
+      }
+    </script>
+
+    <!-- Metamask -->
+    <script>
+      if (typeof window.ethereum !== 'undefined') {
+        console.log('MetaMask is installed!');
+      }
+
+      const ethereumButton = document.getElementById("enableEthereumButton");
+
+      ethereumButton.addEventListener('click', () => {
+        setAccount();
+      });
+
+      async function setAccount() {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        document.getElementById("enableEthereumButton").innerHTML = account;
+      }
+
+      async function subscribe() {
+        const addy = "{{ addy }}"
+        ethereum.request({
+          method: 'eth_subscribe',
+          params: ["logs", {address: addy}],
+        }).then((result) => {
+          //console.log(result); Logs subscription ID
+        }).catch((error) => {
+          fireToast("Failed", "Error Subcribing to Alerts. This means you wont receive solidity Event notifications. i.e. your view won't update on its own. New data will not populate without refreshing. This includes transaction statuses. Error: " + error, "photos/gradient.png");
+        });
+      }
+
+      subscribe();
+
+      ethereum.on('message', (message) => {
+        console.log(message);
+        const data = message["data"]["result"]["data"];
+        const tx_hash = message["data"]["result"]["transactionHash"];
+        $.ajax({
+          type: "POST",
+          url: "decodeABI",
+          data: {tx_hash: tx_hash, csrfmiddlewaretoken: "{{ csrf_token }}"},
+        }).done(function (response) {
+          fireToast("Success!", "Your transaction was successful", "gradient.png");
+        }).fail(function(_,status,err) {
+          fireToast("Failed", "This transaction failed. Reason: " + err + ": " + status, "gradient.png");
+        }).always(function () {
+          back2Normal();
+        });
+      });
+
+    </script>
+
+    <!-- Modal Pop Up -->
+    <script>
+    var modal = document.getElementById("addSongPopup");
+    var checkingModal = document.getElementById("checkSongPopup");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("addASong");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    if (typeof(btn) != 'undefined' && btn != null) {
+      btn.onclick = function() {
+        openModalRouter();
+      }
+    }
+
+    function openModalRouter() {
+      if (document.getElementById("addASongHeaderButton").innerHTML == "") {
+        openCheckerModal();
+      } else {
+        openAdderModal();
+      }
+    }
+
+    function openAdderModal() {
+      modal.style.display = "block";
+      var queueDepthLabel = document.getElementById("queueDepthLabel");
+      var queueLengthPrice = document.getElementById("queueLengthPrice");
+      var totalFeeLabel = document.getElementById("totalFeeLabel");
+      $.ajax({
+        url: 'getQueueLength',
+        success: function(data) {
+          queueDepthLabel.innerHTML = data;
+          queueLengthPrice.innerHTML = "Ξ" + ((data * data)/1000000);
+          totalFeeLabel.innerHTML = "Ξ" + ((data * data)/1000000);
+        },
+        failure: function(data) {
+          queueDepthLabel.innerHTML = "Error";
+          queueLengthPrice.innerHTML = "Error"
+        }
+      });
+    }
+
+    function openCheckerModal() {
+      checkingModal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      hideModals();
+    }
+
+  // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal || event.target == checkingModal) {
+        hideModals();
+      }
+    }
+
+    function hideModals(which) {
+      modal.style.display = "none";
+      checkingModal.style.display = "none";
+    }
+
+
+    function durationChanged(duration) {
+      var durationLabel = document.getElementById("activeDuration");
+      var durationPriceLabel = document.getElementById("activeDurationPrice");
+      var queueDepth = document.getElementById("queueDepthLabel").innerHTML;
+      var totalFeeLabel = document.getElementById("totalFeeLabel");
+      var price = ((duration*duration)/10000);
+      var total = price + ((queueDepth * queueDepth)/1000000);
+      durationLabel.innerHTML = duration;
+      durationPriceLabel.innerHTML = "Ξ" + price;
+      totalFeeLabel.innerHTML = "Ξ" + total;
+    }
+    </script>
+
+
+    <!-- Add Song -->
+    <script>
+    $(document).ready(function () {
+      $("#addSongForm").submit(function (event) {
+        event.preventDefault();
+        document.getElementById("addSongPopup").style.display = "none";
+        document.getElementById("addASongHeaderButton").innerHTML = ""
+        $("#loaderCont").css("visibility", "visible");
+        $("#addSongLiWrapper").css("padding-left", "20px");
+        $("#addSongLiWrapper").css("padding-right", "20px");
+        var token = "{{ csrf_token }}";
+
+        var formData = {
+          title: $("#id_title").val(),
+          artist: $("#id_artist").val(),
+          url: $("#id_url").val(),
+          coverUrl: $("#id_coverUrl").val(),
+          duration: $("#id_duration").val(),
+          csrfmiddlewaretoken: token,
+        };
+
+        var data = "";
+        const address = "{{ addy }}";
+
+        $.ajax({
+          type: "POST",
+          url: "buildSongAdder",
+          data: formData,
+        }).done(function (response) {
+          data = response;
+          const params = {from: ethereum.selectedAddress, to: address, gasPrice: "0x3B9ACA00", gas: "0x7A120", data: data, value: '0x00', chainId: '0x3'};
+          addSong(params);
+        }).fail(function(_,status,err) {
+          back2Normal();
+          alert("The Jukebox song-builder failed. Reason: " + err + ": " + status);
+          fireToast("Failed", "The Jukebox song-builder failed. Reason: " + err + ": " + status, "gradient.png");
+        });
+
+
+      });
+    });
+
+    async function addSong(params) {
+      ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [params],
+      }).then((result) => {
+        document.getElementById("toTxAddSong").href = "https://rinkeby.etherscan.io/tx/" + result;
+        document.getElementById("toTxCheckSong").href = "https://rinkeby.etherscan.io/tx/" + result;
+      }).catch((error) => {
+        back2Normal();
+        fireToast("Failed", "This transaction failed: " + error, "gradient.png");
+      });
+
+    }
+
+    </script>
+
+    <!-- Block Number -->
+    <script>
+      function setProgress(currentBlock) {
+        var elem = document.getElementById("progressBar");
+        if (typeof(elem) == 'undefined' || elem == null) {
+          return;
+        }
+        var start = {{ song.start }};
+        var end = {{ song.end }};
+        var percentage = ((currentBlock - start) / (end - start)) * 100;
+        elem.style.width = percentage + "%";
+      }
+
+      setInterval(function(){
+        $.ajax({
+          url: "getBlockNumber",
+        }).done(function (n) {
+          document.getElementById("blockNumberView").innerHTML = "Block Number: " + n;
+          setProgress(n);
+          if ({{ song.end }} <= n && {{ song.end }} != 0) {
+            location.reload();
+          }
+        }).fail(function(_,_,err) {
+          document.getElementById("blockNumberView").innerHTML = "Block Number: Error";
+        });
+      }, 1000);
+    </script>
+
+    <script>
+      var cw = $('.albumBase').width();
+      $('.albumBase').css({'height':cw+'px'});
+    </script>
+    {% if song.start != 0 %}
+      <style> .albumFrame { background-image: url({{ song.coverUrl }}); } </style>
+    {% else %}
+      <style> .albumFrame { background-image: url({% static 'photos/emptyArtCover.svg' %}) } </style>
+    {% endif %}
+  </body>
+</html>

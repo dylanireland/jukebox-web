@@ -1,0 +1,131 @@
+{% load static %}
+{% load tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Jukebox</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/etc.css' %}">
+    <style>
+    @font-face {
+      font-family: 'Alata'; /* IE9 Compat Modes */
+      src: url("{% static 'fonts/alata-regular.ttf' %}") format('truetype'); /* Safari, Android, iOS */
+    }
+    </style>
+    <!-- favicons -->
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+      <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
+      <link rel="mask-icon" href="{% static 'favicons/safari-pinned-tab.svg' %}" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#00aba9">
+      <meta name="theme-color" content="#ffffff">
+    <!-- end favi -->
+  </head>
+  <body style="font-family: 'Alata', Fallback, sans-serif;">
+    <header class="header">
+  	   <h1 class="logo"><a href="/" style="font-size: 2rem;"><img src="{% static 'photos/logo.svg' %}" alt="Jukebox Logo"><div id="jukeboxName">Jukebox</div></a></h1>
+       <ul class="main-nav">
+       </ul>
+    </header>
+    <div class="container display">
+      <h1>Economics</h1>
+      <p>The Jukebox application charges fees when adding a song in order to keep the application exclusive and intentional. Fees are variable depending on the length of queue at the time of publishing, and the length of the song being added (measured in block intervals). Calculations are performed in USD, while payments are made in Ether. This Ether is stored in a smart contract which, upon release of Jukebox v2, will be swapped for JUK tokens, with the majority being airdropped to previous users of the platform. See <a href="tokenomics" class="colorfulLink">Tokenomics</a></p>
+
+      <div class="desktop">
+        <div class="row">
+          <div class="col-6">
+            <h2>Fee Based on Current Queue Length</h2>
+          </div>
+          <div class="col-6">
+            <h2>Fee Based on Length of Song</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <img src="{% static 'photos/QLChart.png' %}" alt="Queue Length Chart">
+          </div>
+          <div class="col-6">
+            <img src="{% static 'photos/BLChart.png' %}" alt="Block Length Chart">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="mobile">
+        <div>
+          <h2>Fee Based on Current Queue Length</h2>
+          <img src="{% static 'photos/QLChart.png' %}" alt="Queue Length Chart">
+        </div>
+        <div>
+          <h2>Fee Based on Current Queue Length</h2>
+          <img src="{% static 'photos/BLChart.png' %}" alt="Block Length Chart">
+        </div>
+      </div>
+
+      <p>In v2, block intervals will be able to be bought and sold as NFTs. See <a href="future-work" class="colorfulLink">Future Work</a></p>
+    </div>
+
+    <style>
+      .display img {
+        width: 100%;
+      }
+
+      .mobile > div {
+        margin-top: 20px;
+      }
+
+      .mobile, .desktop {
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .mobile {
+          display: block;
+        }
+        .desktop {
+          display: none;
+        }
+
+        .display {
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .mobile {
+          display: none;
+        }
+        .desktop {
+          display: block;
+        }
+        .display {
+          padding: 15px 20px;
+        }
+      }
+
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js" integrity="sha512-TTGImODeszogiro9DUvleC9NJVnxO6M0+69nbM3YE9SYcVe4wZp2XYpELtcikuFZO9vjXNPyeoHAhS5DHzX1ZQ==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/truffle-contract@4.0.31/dist/truffle-contract.js"></script>
+    <script type="module" src="js/app.js"></script>
+
+  </body>
+</html>
