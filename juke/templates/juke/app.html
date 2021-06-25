@@ -48,7 +48,7 @@
 
     <div class="toast" id="notification" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
-        <img id="toastImg" src="" class="rounded me-2">
+        <i id="toastGlyph" class="sexyglyph"></i>
         <strong id="toastTitle" class="me-auto"></strong>
         <small><a id="toTxAddSong"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -63,7 +63,7 @@
             <div id="checkOnSongLoader" class="loader"></div>
           </div>
           <h1>Transaction Pending</h1>
-          <a id="toTxCheckSong">
+          <a id="toTxCheckSong" target="_blank">
             <i class="bi-box-arrow-up-right sexyglyph"></i>
           </a>
 
@@ -126,7 +126,7 @@
                     <div id="progressBar"></div>
                   </div>
                 {% else %}
-                  <button id="addASong">Add a Song</button>
+                  <button id="addASong" class="sexybutton">Add a Song</button>
                 {% endif %}
 
                 <div class="albumBase">
@@ -140,8 +140,9 @@
                 </audio>
               </div>
             </div>
+            <button id="hideQueue" onclick="hideShowQueue();" class="sexybutton">Hide Queue</button>
           </div>
-          <div class="col-6" style="text-align: center; padding: 10px 10px 10px 10px;">
+          <div id="colTableWrapper" class="col-6" style="text-align: center; padding: 10px 10px 10px 10px;">
             <table style="width: 100%;">
               <div style="border: 1px solid black; border-bottom: 0px;">
                 <h4 style="margin: 0; padding: 5px 0px 5px 0px;">Queue</h4>
@@ -197,13 +198,22 @@
         var notification = document.getElementById("notification");
         var toastTitle = document.getElementById("toastTitle");
         var toastBody = document.getElementById("toastBody");
-        var toastImg = document.getElementById("toastImg")
-        const str = "/static/photos/" + src;
-        toastImg.src = str;
+        //var toastImg = document.getElementById("toastImg")
+        var toastGlyph = document.getElementById("toastGlyph");
+        //const str = "/static/photos/" + src;
+        //toastImg.src = str;
+        if (src == "success") {
+          toastGlyph.classList.add("bi-check-lg");
+        } else if (src == "failed") {
+          toastGlyph.classList.add("bi-x-lg");
+        }
         toastTitle.innerHTML = title;
         toastBody.innerHTML = message;
         var toast = new bootstrap.Toast(notification, option);
         toast.show();
+        notification.addEventListener('hide.bs.toast', function () {
+          location.reload();
+        })
       }
     </script>
 
@@ -233,7 +243,7 @@
         }).then((result) => {
           //console.log(result); Logs subscription ID
         }).catch((error) => {
-          fireToast("Failed", "Error Subcribing to Alerts. This means you wont receive solidity Event notifications. i.e. your view won't update on its own. New data will not populate without refreshing. This includes transaction statuses. Error: " + error, "photos/gradient.png");
+          fireToast("Failed", "Error Subcribing to Alerts. This means you wont receive solidity Event notifications. i.e. your view won't update on its own. New data will not populate without refreshing. This includes transaction statuses. Error: " + error, "failed");
         });
       }
 
@@ -248,9 +258,9 @@
           url: "decodeABI",
           data: {tx_hash: tx_hash, csrfmiddlewaretoken: "{{ csrf_token }}"},
         }).done(function (response) {
-          fireToast("Success!", "Your transaction was successful", "gradient.png");
+          fireToast("Success!", "Your transaction was successful", "success");
         }).fail(function(_,status,err) {
-          fireToast("Failed", "This transaction failed. Reason: " + err + ": " + status, "gradient.png");
+          fireToast("Failed", "This transaction failed. Reason: " + err + ": " + status, "success");
         }).always(function () {
           back2Normal();
         });
@@ -263,13 +273,10 @@
     var modal = document.getElementById("addSongPopup");
     var checkingModal = document.getElementById("checkSongPopup");
 
-    // Get the button that opens the modal
     var btn = document.getElementById("addASong");
 
-    // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks on the button, open the modal
     if (typeof(btn) != 'undefined' && btn != null) {
       btn.onclick = function() {
         openModalRouter();
@@ -307,12 +314,10 @@
       checkingModal.style.display = "block";
     }
 
-    // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
       hideModals();
     }
 
-  // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
       if (event.target == modal || event.target == checkingModal) {
         hideModals();
@@ -336,6 +341,22 @@
       durationPriceLabel.innerHTML = "Ξ" + price;
       totalFeeLabel.innerHTML = "Ξ" + total;
     }
+    </script>
+
+
+    <!-- HIDE/SHOW QUEUE MOBILE -->
+    <script>
+      function hideShowQueue() {
+        var queue = document.getElementById("colTableWrapper");
+        var hideQueueButton = document.getElementById("hideQueue");
+        if (queue.style.display == "none") {
+          queue.style.display = "block";
+          hideQueueButton.innerHTML = "Hide Queue";
+        } else {
+          queue.style.display = "none";
+          hideQueueButton.innerHTML = "Show Queue";
+        }
+      }
     </script>
 
 
@@ -374,7 +395,7 @@
         }).fail(function(_,status,err) {
           back2Normal();
           alert("The Jukebox song-builder failed. Reason: " + err + ": " + status);
-          fireToast("Failed", "The Jukebox song-builder failed. Reason: " + err + ": " + status, "gradient.png");
+          fireToast("Failed", "The Jukebox song-builder failed. Reason: " + err + ": " + status, "failed");
         });
 
 
@@ -390,7 +411,7 @@
         document.getElementById("toTxCheckSong").href = "https://rinkeby.etherscan.io/tx/" + result;
       }).catch((error) => {
         back2Normal();
-        fireToast("Failed", "This transaction failed: " + error, "gradient.png");
+        fireToast("Failed", "This transaction failed: " + error, "failed");
       });
 
     }

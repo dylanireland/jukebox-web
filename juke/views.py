@@ -5,7 +5,6 @@ from web3 import Web3
 from .song import Song
 import json
 from .contract import Contract
-import boto3
 
 # Create your views here.
 
@@ -67,9 +66,9 @@ def getQueue(contract, queueDepth, queueLength):
 
 def getFAQ():
     dict = {
-
+        "How do I listen to Jukebox?": "To listen, simply visit the <a href='app' class='colorfulLink'>Jukebox dApp</a> and press play!",
         "How do I add a song to Jukebox?": "To add a song to the Jukebox queue, visit the <a href='app' class='colorfulLink'>Jukebox dApp</a> and select \"Add Song\". You may provide a direct link to an audio file or a download link for an audio file. You may also input a YouTube video link to be converted to audio.",
-        "Are there fees to use Jukebox?": "There are no fees for listening to music; it is free and always will be. Adding songs to the queue does however include fees calculated in USD and paid in Ether and is more expensive the longer the queue and the longer the song. See <a href='tokenomics' class='colorfulLink'>Fee Pricing</a>",
+        "Are there fees to use Jukebox?": "There are no fees for listening to music; it is free and always will be. Adding songs to the queue does however include fees paid in Ether and is more expensive the longer the queue and the longer the song. See <a href='tokenomics' class='colorfulLink'>Fee Pricing</a>",
         "How are fees distributed?": "Fees paid in Ether are stored in a smart contract and will be used to swap for JUK tokens when v2 is released.",
         "What are JUK tokens?": "JUK tokens will be ERC20 tokens that will be used to pay Jukebox fees. In v2, all fees must be paid with JUK tokens and <b>ALL</b> fee payments will be burned. See <a href='tokenomics' class='colorfulLink'>Tokenomics</a>",
         "Where can I get JUK tokens?": "JUK tokens do not yet exist but the best way to acquire them is to publish songs to Jukebox. Upon release of v2 all previous users will receive an airdrop of JUK tokens. Those who added more songs will receive higher tiers."

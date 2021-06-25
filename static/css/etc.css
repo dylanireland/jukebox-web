@@ -16,8 +16,6 @@ body::before {
   background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.85), rgba(255,255,255,0.85), rgba(255,255,255,1));
 }
 
-
-
 .logo {
   margin: 0;
   font-size: 1.45em;
@@ -96,6 +94,36 @@ ul.main-nav {
   padding-top: 10px;
 }
 
+/* QUEUE */
+#queueWrapper {
+  padding-top: 30px;
+  max-width: 50%;
+  margin: auto;
+}
+
+#queue {
+  width: 100%;
+}
+
+#queueNameBox {
+  border: 1px solid black;
+  border-bottom: 0px;
+}
+
+#queueNameBox > h4 {
+  margin: 0;
+  padding: 5px 0px 5px 0px;
+}
+
+#queue, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 3px;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
 
   .logo img {
@@ -108,5 +136,16 @@ ul.main-nav {
 
   .colorfulLink {
     white-space: nowrap;
+  }
+
+  #queueWrapper {
+    max-width: 100%;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  th, td {
+    font-size: 0.7rem;
   }
 }

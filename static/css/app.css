@@ -22,9 +22,9 @@ body::before {
   z-index: 99;
 }
 
-.toast img {
-  width: 30px;
-  height: 30px;
+#toastGlyph {
+  font-size: 120%;
+  margin-right: 5px;
 }
 
 .sexyglyph {
@@ -128,6 +128,13 @@ th, td {
 }
 
 #addASong {
+  font-size: 16px;
+  width: 40%;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.sexybutton {
   background-image: url('../photos/gradient.png');
   background-repeat: no-repeat;
   background-size: cover;
@@ -136,13 +143,15 @@ th, td {
   text-align: center;
   text-decoration: none;
   display: block;
-  font-size: 16px;
   border-radius: 4px;
   transition-duration: 0.7s;
-  width: 40%;
-  height: 30px;
   margin: auto;
-  margin-bottom: 10px;
+}
+
+#hideQueue {
+  margin-top: 20px;
+  margin-bottom: -10px;
+  display: none;
 }
 
 /* The Modal (background) */
@@ -370,9 +379,13 @@ th, td {
   width: 1%;
   height: 10px;
   border-radius: 5px;
-  background: url({% static 'photos/gradient.png' %});
+  background: url('../photos/gradient.png');
   background-size: cover;
   transition: all .5s linear;
+}
+
+#colTableWrapper {
+  transition: all 0.7s linear;
 }
 
 /* MOBILE */
@@ -380,6 +393,11 @@ th, td {
 @media (max-width: 767px) {
   .header {
     justify-content: space-between;
+  }
+
+  .loaderCont {
+    width: 15px;
+    height: 15px;
   }
 
   #metamaskLogo {
@@ -396,6 +414,12 @@ th, td {
     font-size: 4vw;
   }
 
+  #blockNumberWrapper {
+    border: 2px solid black;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
   .baseContainerBackground {
     max-width: 90%;
   }
@@ -406,7 +430,11 @@ th, td {
 
   .baseContainerBackground > div > .row > .col-6 {
     flex: initial;
-    max-width: 100%;
+    width: 100%;
+  }
+
+  .baseContainerBackground #contentView #visibleContent {
+    max-width: 80%;
   }
 
   .baseContainerBackground > div > .row > .col-6 > #contentView #titleView {
@@ -435,16 +463,29 @@ th, td {
     margin-right: 0;
   }
 
+  #startBlockView, #endBlockView {
+    font-size: 0.7rem;
+  }
+
+  #durationProgress {
+    width: 95%;
+  }
+
   .albumBase {
     width: 100%;
   }
 
   #addASong {
-    white-space: nowrap;
+    width: initial;
   }
 
   audio {
     width: 60%;
+  }
+
+  #hideQueue {
+    display: block;
+    padding: 3px;
   }
 
   .modal-content {
