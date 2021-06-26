@@ -2,10 +2,9 @@
   scroll-behavior: smooth !important;
 }
 
-
 #jukeboxName, .colorfulLink {
   position: relative;
-  background: url('../photos/gradient180.png') no-repeat center center;
+  background: url('../photos/sexyLink.png') no-repeat center center;
   background-size: 100%;
   color: transparent;
   -webkit-background-clip: text;
@@ -17,13 +16,19 @@
 #jukeboxName:hover, .colorfulLink:hover {
   text-decoration: none;
   color: transparent;
-  background: url('../photos/gradient.png') no-repeat center center;
+  background: url('../photos/sexyLink180.png') no-repeat center center;
   background-size: 100%;
   -webkit-background-clip: text;
   background-clip: text;
 }
 
+#jukeboxName {
+  background-image: url('../photos/gradient180.png');
+}
 
+#jukeboxName:hover {
+  background-image: url('../photos/gradient.png');
+}
 
 #forwardFacingDiv {
   margin-top: 5vw;

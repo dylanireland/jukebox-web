@@ -232,6 +232,13 @@ th, td {
   z-index: 2;
 }
 
+#negNetNelly {
+  color: red;
+  display: none;
+  margin-bottom: 0;
+  padding-top: 10px;
+}
+
 .loader {
   height: 100%;
   width: 100%;
@@ -267,25 +274,7 @@ th, td {
   border-width: 10px;
 }
 
-#jukeboxName, .colorfulLink {
-  position: relative;
-  background: url('../photos/gradient180.png') no-repeat center center;
-  background-size: 100%;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  display: inline;
-  transition-duration: 0.5s;
-}
 
-#jukeboxName:hover, .colorfulLink:hover {
-  text-decoration: none;
-  color: transparent;
-  background: url('../photos/gradient.png') no-repeat center center;
-  background-size: 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

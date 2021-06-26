@@ -11,3 +11,11 @@ def makeShorterAddy(addy):
 @register.filter
 def at(arr, i):
     return arr[i]
+
+@register.filter
+
+def fontSizeFromString(string):
+    if len(string) > 30:
+        return "1.5rem"
+    else:
+        return "2.3rem"

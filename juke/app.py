@@ -38,7 +38,9 @@ def index(request):
     if queue == None:
         return HttpResponse("Something went wrong 102")
 
-    context = {"queue": queue[1:10], "form": AddSongForm(), "addy": Contract.getAddy(), "blockNumber": web3.eth.blockNumber}
+    queue = queue[1:10]
+
+    context = {"queue": [trunc(song) for song in queue], "form": AddSongForm(), "addy": Contract.getAddy(), "blockNumber": web3.eth.blockNumber}
 
     try:
         songUrl, songCoverUrl, songTitle, songArtist, songPublisher, start, end = contract.functions.getCurrentSong().call()
@@ -51,7 +53,7 @@ def index(request):
     localSongName = str(start) + '.mp3'
 
     currentSong = Song('songs/' + str(start) + '.mp3', songCoverUrl, songTitle, songArtist, songPublisher, start, end)
-    context['song'] = currentSong
+    context['song'] = trunc(currentSong)
 
     return HttpResponse(template.render(context, request))
 
@@ -76,3 +78,13 @@ def getQueue(contract, queueDepth, queueLength):
         newDict.append(dict[queueDepth - 1])
         queueDepth = queueDepth - 1
     return newDict
+
+
+def trunc(song):
+    if len(song.title) > 40:
+        song.title = song.title[:30] + "..." + song.title[-10:]
+
+    if len(song.artist) > 40:
+        song.artist = song.artist[:30] + "..." + song.artist[-10:]
+
+    return song

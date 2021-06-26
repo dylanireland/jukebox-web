@@ -34,9 +34,17 @@ def index(request):
     artist = request.POST.get('artist')
     duration = int(request.POST.get('duration'))
 
+    if duration > 255:
+        return HttpResponseBadRequest("Duration may not be longer than 255 blocks.")
+
     if url == None or coverUrl == None or title == None or artist == None or duration == None or url == "" or coverUrl == "" or title == "" or artist == "" or duration <= 0:
         return HttpResponseBadRequest("Bad data")
 
-    return HttpResponse(contract.encodeABI(fn_name="addSong", args=[url, coverUrl, title, artist, duration]))
 
-    #return HttpResponse(encode_abi(['string', 'string', 'string', 'string', 'uint256'], [url, coverUrl, title, artist, duration]))
+    data = contract.encodeABI(fn_name="addSong", args=[url, coverUrl, title, artist, duration])
+
+    gasLimit = contract.functions.addSong(url, coverUrl, title, artist, duration).estimateGas() + 30000
+
+    return HttpResponse(data + "%" + str(hex(gasLimit)))
+
+    #return (HttpResponse(contract.encodeABI(fn_name="addSong", args=[url, coverUrl, title, artist, duration])), HttpResponse(contract.functions.addSong(url, coverUrl, title, artist, duration).estimateGas()))

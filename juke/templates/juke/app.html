@@ -96,11 +96,12 @@
                 <div>
                   <p style="margin-bottom: 10px;">Please enter the duration in number of blocks. You may want to round up to ensure the entirity of your song is heard. Some blocks are mined sooner and later than others. The average block time is <b>13s</b></p>
                   <p>The queue is currently <b id="queueDepthLabel"></b> songs long. The price for adding a song at this queue length is <b id="queueLengthPrice"></b></p>
-                  <p>Your song is <b id="activeDuration">0</b> blocks long. The price for this duration is <b id="activeDurationPrice">Ξ0</b><a href="faq" style="padding-left: 30px;">Fee Pricing</a></p>
+                  <p>Your song is <b id="activeDuration">0</b> blocks long. The price for this duration is <b id="activeDurationPrice">Ξ0</b><a class="colorfulLink" href="faq" style="padding-left: 30px;">Fee Pricing</a></p>
 
                   <p>Your total fee is <b id="totalFeeLabel"></b></p>
                   <div style="position: relative;">
                     <input type="submit" id="submitAddSong" value="Submit"/>
+                    <p id="negNetNelly">Please switch to the Rinkeby Network</p>
                   </div>
                 </div>
               </div>
@@ -118,7 +119,7 @@
               <div id="visibleContent">
                 <div id="titleView">
                   <div id="startBlockView">Start<br>{{ song.start }}</div>
-                  <div id="songNameView"><h1>{{ song.title }}</h1></div>
+                  <div id="songNameView"><h1 style="font-size: {{ song.title|fontSizeFromString }}">{{ song.title }}</h1></div>
                   <div id="endBlockView">End<br>{{ song.end }}</div>
                 </div>
                 {% if song.end != 0 %}
@@ -133,8 +134,8 @@
                   <div class="container albumFrame">
                   </div>
                 </div>
-                <h3>Artist: {{ song.artist }}</h3>
-                <h4>Publisher: <a href="https://etherscan.io/address/{{ publisherAddress }}" target="_blank">{{ song.publisher|makeShorterAddy }}</a></h4>
+                <h3 style="font-size: {{ song.artist|fontSizeFromString }}">Artist: {{ song.artist }}</h3>
+                <h4>Publisher: <a class="colorfulLink" href="https://etherscan.io/address/{{ publisherAddress }}" target="_blank">{{ song.publisher|makeShorterAddy }}</a></h4>
                 <audio controls autoplay>
                   <source src="{% static "" %}{{ song.url }}" type="audio/mp3">
                 </audio>
@@ -158,14 +159,14 @@
                 <tr>
                   <td>{{ sng.title }}</td>
                   <td>{{ sng.artist }}</td>
-                  <td><a href="https://etherscan.io/address/{{ song.publisher }}" target="_blank">{{ sng.publisher|makeShorterAddy }}</td>
-                    <td>{{ sng.start }}</td>
-                    <td>{{ sng.end }}</td>
-                  </tr>
+                  <td><a class="colorfulLink" href="https://etherscan.io/address/{{ song.publisher }}" target="_blank">{{ sng.publisher|makeShorterAddy }}</td>
+                  <td>{{ sng.start }}</td>
+                  <td>{{ sng.end }}</td>
+                </tr>
               {% endfor %}
             </table>
             <div style="border: 1px solid black; border-top: 0px;">
-              <a href="queue" style="margin: 0; padding: 5px 0px 5px 0px;">View Full Queue</a>
+              <a class="colorfulLink" href="queue" style="margin: 0; padding: 5px 0px 5px 0px;">View Full Queue</a>
             </div>
           </div>
         </div>
@@ -223,6 +224,14 @@
         console.log('MetaMask is installed!');
       }
 
+      var chainId;
+
+      async function setChainId() {
+        chainId = await ethereum.request({ method: 'eth_chainId' });
+      }
+
+      setChainId();
+
       const ethereumButton = document.getElementById("enableEthereumButton");
 
       ethereumButton.addEventListener('click', () => {
@@ -235,6 +244,7 @@
         document.getElementById("enableEthereumButton").innerHTML = account;
       }
 
+      //Subcribe to event notifications
       async function subscribe() {
         const addy = "{{ addy }}"
         ethereum.request({
@@ -249,6 +259,8 @@
 
       subscribe();
 
+
+      //Handle event notification
       ethereum.on('message', (message) => {
         console.log(message);
         const data = message["data"]["result"]["data"];
@@ -264,6 +276,11 @@
         }).always(function () {
           back2Normal();
         });
+      });
+
+      //Reload on chain change
+      ethereum.on('chainChanged', (_chainId) => {
+        window.location.reload();
       });
 
     </script>
@@ -296,6 +313,15 @@
       var queueDepthLabel = document.getElementById("queueDepthLabel");
       var queueLengthPrice = document.getElementById("queueLengthPrice");
       var totalFeeLabel = document.getElementById("totalFeeLabel");
+      var submit = document.getElementById("submitAddSong");
+      var negNetNelly = document.getElementById("negNetNelly");
+      if (chainId != "0x4") {
+        submit.disabled = true;
+        submit.style.backgroundColor = "#eee";
+        submit.style.backgroundImage = "none";
+        submit.value = "Wrong Network";
+        negNetNelly.style.display = "block";
+      }
       $.ajax({
         url: 'getQueueLength',
         success: function(data) {
@@ -389,8 +415,13 @@
           url: "buildSongAdder",
           data: formData,
         }).done(function (response) {
-          data = response;
-          const params = {from: ethereum.selectedAddress, to: address, gasPrice: "0x3B9ACA00", gas: "0x7A120", data: data, value: '0x00', chainId: '0x3'};
+          result = response.split("%");
+          data = result[0];
+          gas = result[1];
+          console.log(result);
+          console.log(data);
+          console.log(gas);
+          const params = {from: ethereum.selectedAddress, to: address, gasPrice: "0x3B9ACA00", gas: gas, data: data, value: '0x00', chainId: '0x3'};
           addSong(params);
         }).fail(function(_,status,err) {
           back2Normal();
