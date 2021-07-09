@@ -288,6 +288,40 @@ ul.main-nav {
   left: -25px;
 }
 
+/* FOOTER */
+
+#footer {
+  min-height: 100px;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+#footer > h3 {
+  font-size: 1rem;
+}
+
+#footer #socialFooter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#footer #socialFooter > a {
+  color: black;
+}
+
+#footer #socialFooter > a > * {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 @keyframes pulse-black {
   0% {
   transform: scale(0.95);

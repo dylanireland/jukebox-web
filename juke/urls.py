@@ -7,6 +7,7 @@ from . import addSong
 from . import getBlockNumber
 from . import tests
 from . import economics
+from . import futurework
 from . import queue
 from . import buildSongAdder
 from . import decodeABI
@@ -19,6 +20,7 @@ urlpatterns = [
     path('addSong', addSong.index, name='addSong'),
     path('test', tests.index, name="tests"),
     path('economics', economics.index, name="economics"),
+    path('future-work', futurework.index, name="futurework"),
     path('queue', queue.index, name="queue"),
     path('buildSongAdder', buildSongAdder.index, name="buildSongAdder"),
     path('decodeABI', decodeABI.index, name="decodeABI")

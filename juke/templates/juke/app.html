@@ -78,7 +78,7 @@
         </div>
         <div style="text-align: center; margin-top: -2%;">
           <h1>Add a Song</h1>
-          <form id="addSongForm" action="#" method="post">
+          <form enctype="multipart/form-data" id="addSongForm" action="#" method="post">
             {% csrf_token %}
             <div class="container">
               <div class="row">
@@ -88,20 +88,21 @@
                 <div class="col-6" style="padding-right: 0;">
                   {{ form.artist }}
                 </div>
-                {{ form.url }}
-                <p>You may enter the url of any MP3 file hosted online. You may also add the link of a YouTube video to be converted to audio.</p>
-                {{ form.coverUrl }}
+
+                <div class="songUrlWrapper">{{ form.url }}{{ form.song }}</div>
+                <p>You may enter the url of any MP3 file hosted online OR ou may also upload an audio file for Jukebox to host for free. (limited to 20MB)</p>
+                <div class="songUrlWrapper">{{ form.coverUrl }}{{ form.covfile }}</div>
                 <p>Please enter the url of the cover image for this track. Base64 encoded images are not supported.</p>
                 {{ form.duration }}
                 <div>
-                  <p style="margin-bottom: 10px;">Please enter the duration in number of blocks. You may want to round up to ensure the entirity of your song is heard. Some blocks are mined sooner and later than others. The average block time is <b>13s</b></p>
+                  <p style="margin-bottom: 10px;">Please enter the duration in number of blocks. You may want to round up to ensure the entirity of your song is heard. Some blocks are mined sooner and later than others. The average block time is <b>15s</b></p>
                   <p>The queue is currently <b id="queueDepthLabel"></b> songs long. The price for adding a song at this queue length is <b id="queueLengthPrice"></b></p>
                   <p>Your song is <b id="activeDuration">0</b> blocks long. The price for this duration is <b id="activeDurationPrice">Ξ0</b><a class="colorfulLink" href="faq" style="padding-left: 30px;">Fee Pricing</a></p>
 
                   <p>Your total fee is <b id="totalFeeLabel"></b></p>
                   <div style="position: relative;">
                     <input type="submit" id="submitAddSong" value="Submit"/>
-                    <p id="negNetNelly">Please switch to the Rinkeby Network</p>
+                    <p id="negNetNelly"></p>
                   </div>
                 </div>
               </div>
@@ -137,7 +138,7 @@
                 <h3 style="font-size: {{ song.artist|fontSizeFromString }}">Artist: {{ song.artist }}</h3>
                 <h4>Publisher: <a class="colorfulLink" href="https://etherscan.io/address/{{ publisherAddress }}" target="_blank">{{ song.publisher|makeShorterAddy }}</a></h4>
                 <audio controls autoplay>
-                  <source src="{% static "" %}{{ song.url }}" type="audio/mp3">
+                  <source src="{{ song.url }}" type="audio/mp3">
                 </audio>
               </div>
             </div>
@@ -251,7 +252,7 @@
           method: 'eth_subscribe',
           params: ["logs", {address: addy}],
         }).then((result) => {
-          //console.log(result); Logs subscription ID
+          console.log(result); //Logs subscription ID
         }).catch((error) => {
           fireToast("Failed", "Error Subcribing to Alerts. This means you wont receive solidity Event notifications. i.e. your view won't update on its own. New data will not populate without refreshing. This includes transaction statuses. Error: " + error, "failed");
         });
@@ -270,6 +271,7 @@
           url: "decodeABI",
           data: {tx_hash: tx_hash, csrfmiddlewaretoken: "{{ csrf_token }}"},
         }).done(function (response) {
+          console.log(response);
           fireToast("Success!", "Your transaction was successful", "success");
         }).fail(function(_,status,err) {
           fireToast("Failed", "This transaction failed. Reason: " + err + ": " + status, "success");
@@ -313,6 +315,7 @@
       var queueDepthLabel = document.getElementById("queueDepthLabel");
       var queueLengthPrice = document.getElementById("queueLengthPrice");
       var totalFeeLabel = document.getElementById("totalFeeLabel");
+      var durationLabel = document.getElementById("activeDuration");
       var submit = document.getElementById("submitAddSong");
       var negNetNelly = document.getElementById("negNetNelly");
       if (chainId != "0x4") {
@@ -320,14 +323,16 @@
         submit.style.backgroundColor = "#eee";
         submit.style.backgroundImage = "none";
         submit.value = "Wrong Network";
+        negNetNelly.innerHTML = "Please switch to the Rinkeby Network.";
         negNetNelly.style.display = "block";
       }
       $.ajax({
         url: 'getQueueLength',
         success: function(data) {
           queueDepthLabel.innerHTML = data;
-          queueLengthPrice.innerHTML = "Ξ" + ((data * data)/1000000);
-          totalFeeLabel.innerHTML = "Ξ" + ((data * data)/1000000);
+          queueLengthPrice.innerHTML = "Ξ" + (data/5000);
+          var duration = parseInt(durationLabel.innerHTML);
+          totalFeeLabel.innerHTML = "Ξ" + ((duration * duration / 50000) + (data/5000));
         },
         failure: function(data) {
           queueDepthLabel.innerHTML = "Error";
@@ -361,12 +366,34 @@
       var durationPriceLabel = document.getElementById("activeDurationPrice");
       var queueDepth = document.getElementById("queueDepthLabel").innerHTML;
       var totalFeeLabel = document.getElementById("totalFeeLabel");
-      var price = ((duration*duration)/10000);
-      var total = price + ((queueDepth * queueDepth)/1000000);
+      var submit = document.getElementById("submitAddSong");
+      var negNetNelly = document.getElementById("negNetNelly");
+      const submitError = "Too Long";
+      if (duration > 255) {
+        submit.disabled = true;
+        submit.style.backgroundColor = "#eee";
+        submit.style.backgroundImage = "none";
+        submit.value = submitError;
+        negNetNelly.innerHTML = "Songs longer than 255 blocks are not supported. Tx will revert.";
+        negNetNelly.style.display = "block";
+      }
+
+      if (submit.value == submitError) {
+        if (duration <= 255) {
+          submit.disabled = false;
+          submit.style.backgroundColor = "#eee";
+          submit.style.removeProperty("background-image");
+          submit.value = "Submit"
+          negNetNelly.style.display = "none";
+        }
+      }
+      var price = ((duration*duration)/50000);
+      var total = price + (queueDepth/5000);
       durationLabel.innerHTML = duration;
       durationPriceLabel.innerHTML = "Ξ" + price;
       totalFeeLabel.innerHTML = "Ξ" + total;
     }
+
     </script>
 
 
@@ -397,15 +424,27 @@
         $("#addSongLiWrapper").css("padding-left", "20px");
         $("#addSongLiWrapper").css("padding-right", "20px");
         var token = "{{ csrf_token }}";
-
-        var formData = {
+        var form = $('form')[0];
+        var formData = new FormData(form);
+        //formData.append('title', $("#id_title").val());
+        //formData.append('artist', $("#id_artist").val());
+        //formData.append('url', $("#id_url").val());
+        //formData.append('coverUrl', $("#id_coverUrl").val());
+        //formData.append("duration", $("#id_duration").val());
+        formData.append("value", parseInt(parseFloat(document.getElementById("totalFeeLabel").innerHTML.substring(1)) * 1000000000000000000));
+        //formData.append("file", document.getElementById("id_song").files[0]);
+        //formData.append("covfile", document.getElementById("id_song").files[0]);
+        formData.append('csrfmiddlewaretoken', token);
+        /*var formData = {
           title: $("#id_title").val(),
           artist: $("#id_artist").val(),
           url: $("#id_url").val(),
           coverUrl: $("#id_coverUrl").val(),
           duration: $("#id_duration").val(),
+          value: parseInt(parseFloat(document.getElementById("totalFeeLabel").innerHTML.substring(1)) * 1000000000000000000),
+          file: document.getElementById("id_song").files[0],
           csrfmiddlewaretoken: token,
-        };
+        };*/
 
         var data = "";
         const address = "{{ addy }}";
@@ -414,19 +453,26 @@
           type: "POST",
           url: "buildSongAdder",
           data: formData,
+          contentType: false,
+          processData: false,
         }).done(function (response) {
           result = response.split("%");
           data = result[0];
           gas = result[1];
+          value = result[2];
           console.log(result);
           console.log(data);
           console.log(gas);
-          const params = {from: ethereum.selectedAddress, to: address, gasPrice: "0x3B9ACA00", gas: gas, data: data, value: '0x00', chainId: '0x3'};
+          const params = {from: ethereum.selectedAddress, to: address, gasPrice: "0x3B9ACA00", gas: gas, data: data, value: value, chainId: '0x3'};
           addSong(params);
-        }).fail(function(_,status,err) {
+        }).fail(function(ret, _, _) {
           back2Normal();
-          alert("The Jukebox song-builder failed. Reason: " + err + ": " + status);
-          fireToast("Failed", "The Jukebox song-builder failed. Reason: " + err + ": " + status, "failed");
+          if (ret.message !== 'undefined') {
+            fireToast("Failed", "The Jukebox song-builder failed. Reason: " + ret.message, "failed");
+          } else {
+            fireToast("Failed", "The Jukebox song-builder failed. Reason: " + ret.responseText, "failed");
+          }
+
         });
 
 
@@ -480,6 +526,11 @@
     <script>
       var cw = $('.albumBase').width();
       $('.albumBase').css({'height':cw+'px'});
+
+      $(window).resize(function() {
+        var cw = $('.albumBase').width();
+        $('.albumBase').css({'height':cw+'px'});
+      });
     </script>
     {% if song.start != 0 %}
       <style> .albumFrame { background-image: url({{ song.coverUrl }}); } </style>

@@ -32,7 +32,7 @@ def index(request):
         return HttpResponse("Something went wrong 102")
 
     template = loader.get_template('juke/queue.html')
-    context = {"queue": queue}
+    context = {"queue": [trunc(song) for song in queue]}
     return HttpResponse(template.render(context, request))
 
 
@@ -57,3 +57,12 @@ def getQueue(contract, queueDepth, queueLength):
         newDict.append(dict[queueDepth - 1])
         queueDepth = queueDepth - 1
     return newDict
+
+def trunc(song):
+    if len(song.title) > 35:
+        song.title = song.title[:35] + "..."
+
+    if len(song.artist) > 30:
+        song.artist = song.artist[:30] + "..."
+
+    return song

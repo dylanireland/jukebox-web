@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-0rk%vpb!wk@cy4y9624!enn0uaxv(=3y3@uq#d+!l6u_v#j1iq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["jukeboxdapp.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["jukeboxdapp.com", "127.0.0.1", "ec2-3-16-163-102.us-east-2.compute.amazonaws.com"]
 
 
 # Application definition

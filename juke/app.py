@@ -50,9 +50,7 @@ def index(request):
         context['song'] = Song("","","Queue Empty","","",0,0)
         return HttpResponse(template.render(context, request))
 
-    localSongName = str(start) + '.mp3'
-
-    currentSong = Song('songs/' + str(start) + '.mp3', songCoverUrl, songTitle, songArtist, songPublisher, start, end)
+    currentSong = Song(songUrl, songCoverUrl, songTitle, songArtist, songPublisher, start, end)
     context['song'] = trunc(currentSong)
 
     return HttpResponse(template.render(context, request))
@@ -81,10 +79,10 @@ def getQueue(contract, queueDepth, queueLength):
 
 
 def trunc(song):
-    if len(song.title) > 40:
-        song.title = song.title[:30] + "..." + song.title[-10:]
+    if len(song.title) > 35:
+        song.title = song.title[:35] + "..."
 
-    if len(song.artist) > 40:
-        song.artist = song.artist[:30] + "..." + song.artist[-10:]
+    if len(song.artist) > 30:
+        song.artist = song.artist[:30] + "..."
 
     return song

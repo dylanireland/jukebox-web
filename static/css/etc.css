@@ -61,7 +61,7 @@ ul.main-nav {
 
 #jukeboxName, .colorfulLink {
   position: relative;
-  background: url('../photos/gradient180.png') no-repeat center center;
+  background: url('../photos/sexyLink.png') no-repeat center center;
   background-size: 100%;
   color: transparent;
   -webkit-background-clip: text;
@@ -73,7 +73,7 @@ ul.main-nav {
 #jukeboxName:hover, .colorfulLink:hover {
   text-decoration: none;
   color: transparent;
-  background: url('../photos/gradient.png') no-repeat center center;
+  background: url("../photos/sexyLink180.png") no-repeat center center;
   background-size: 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -83,7 +83,8 @@ ul.main-nav {
   border-radius: 10px;
   background-color: white;
   margin: auto;
-  width: 85vw;
+  width: 80vw;
+  max-width: 80vw;
   min-height: 80vh;
   text-align: center;
   position: relative;
@@ -92,6 +93,62 @@ ul.main-nav {
 .display > h1 {
   margin: auto;
   padding-top: 10px;
+}
+
+.display p {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.display img {
+  width: 100%;
+}
+
+.mobile > div {
+  margin-top: 20px;
+}
+
+.mobile, .desktop {
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .mobile {
+    display: block;
+  }
+  .desktop {
+    display: none;
+  }
+
+  .display {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  .display p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile {
+    display: none;
+  }
+  .desktop {
+    display: block;
+  }
+  .display {
+    padding: 15px 20px;
+  }
 }
 
 /* QUEUE */
@@ -147,5 +204,46 @@ th, td {
 
   th, td {
     font-size: 0.7rem;
+  }
+}
+
+/* FUTURE WORK */
+
+.futurework > h1 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.futurework .col-6 {
+  margin-bottom: 10px;
+}
+
+.futureworkcontainer {
+  padding: 25px;
+  background-color: #eee;
+  margin: auto;
+  max-width: 80%;
+  border-radius: 25px;
+  text-align: left;
+}
+
+.futureworkcontainer p {
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .futureworkcontainer .row {
+    flex-direction: column;
+    align-content: center;
+  }
+
+  .futureworkcontainer .row .col-6 {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .pl40 {
+    padding-left: 40px;
   }
 }

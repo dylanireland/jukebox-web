@@ -104,6 +104,25 @@ th, td {
   margin-top: 20px;
 }
 
+#id_url {
+  margin-top: 0;
+  margin-right: 10px;
+}
+
+#id_coverUrl {
+  margin-top: 0;
+  margin-right: 10px;
+}
+
+.songUrlWrapper {
+  display: flex;
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .modal-content > div > .container > .row > .col-6 {
   padding: 0 20px 0 0;
 }

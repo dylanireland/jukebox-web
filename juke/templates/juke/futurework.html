@@ -30,43 +30,27 @@
        <ul class="main-nav">
        </ul>
     </header>
-    <div class="container display">
-      <h1>Economics &amp; Fees</h1>
-      <p>The Jukebox application charges fees when adding a song in order to keep the application exclusive and intentional. Fees are variable depending on the length of queue at the time of publishing, and the length of the song being added (measured in block intervals). Fees are paid in Ether and stored in a smart contract which, upon release of Jukebox v2, will be swapped for JUK tokens. The majority of these JUK tokens will be airdropped to previous users of the platform that submitted songs to the queue</p>
-
-      <div class="desktop">
+    <div class="container display futurework">
+      <h1>Future Work</h1>
+      <p>The following is a list of current planned upgrades to the Jukebox application.</p>
+      <div class="futureworkcontainer">
         <div class="row">
-          <div class="col-6">
-            <h2>Fee Based on Length of Song</h2>
+          <div class="col-6 pl40">
+            <h3>JUK Token</h3>
           </div>
           <div class="col-6">
-            <h2>Fee Based on Current Queue Length</h2>
+            <p>Along with the release of Jukebox v2 will be the JUK ERC20 token. This token will be used to pay for fees to use the platform. In v2, all fees will be burned in order to ensure an ever depleting supply of JUK tokens.</p>
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
-            <img src="{% static 'photos/BLChart.png' %}" alt="Block Length Chart">
+          <div class="col-6 pl40">
+            <h3>NFT Based Time Slots</h3>
           </div>
           <div class="col-6">
-            <img src="{% static 'photos/QLChart.png' %}" alt="Queue Length Chart">
+            <p>In Jukebox v2, time slots will be able to be bought and sold as NFTs.</p>
           </div>
         </div>
       </div>
-
-
-      <div class="mobile">
-        <div>
-          <h2>Fee Based on Current Queue Length</h2>
-          <img src="{% static 'photos/BLChart.png' %}" alt="Block Length Chart">
-        </div>
-        <div>
-          <h2>Fee Based on Current Queue Length</h2>
-          <img src="{% static 'photos/QLChart.png' %}" alt="Queue Length Chart">
-        </div>
-      </div>
-
-      <p>Fee costs are determined by the equation <b>b^2/50000 + q/5000</b> where &quot;b&quot; represents the length of the song (in blocks) and &quot;q&quot; represents the length of queue (in songs) at the time of submission. <b style="color: red;">This is subject to change.</b></p>
-      <p>In v2, time slots will be able to be bought and sold as NFTs. See <a href="future-work" class="colorfulLink">Future Work</a></p>
     </div>
 
 

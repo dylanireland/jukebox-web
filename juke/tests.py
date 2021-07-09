@@ -4,13 +4,11 @@ from web3 import Web3
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 # Create your views here.
+import boto3
 
 def index(request):
-    saveFromYoutube("https://www.youtube.com/watch?v=53_HPbH64_M", 760)
-
-
-
-def saveFromYoutube(url, blockNumber):
-    ydl_opts = {'format': 'bestaudio/best', 'extractaudio': True, 'audioformat': 'mp3', 'outtmpl': 'juke/static/songs/' + str(blockNumber) + '.mp3', 'noplaylist': True, 'nocheckcertificate':True, 'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3','preferredquality': '192'}],}
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+    s3 = boto3.resource('s3')
+    data = open('txt.txt', 'a')
+    data.write("Bitch")
+    s3.Bucket('openjukebutton').put_object(Key='txt.txt', Body=data)
+    return HttpResponse("Should be done")
