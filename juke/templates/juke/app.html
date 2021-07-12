@@ -59,15 +59,15 @@
     <div id="checkSongPopup" class="modal">
       <div class="modal-content">
         <div>
+          <h1>Transaction Pending</h1>
           <div id="checkOnSongLoaderCont" class="loaderCont">
             <div id="checkOnSongLoader" class="loader"></div>
           </div>
-          <h1>Transaction Pending</h1>
-          <a id="toTxCheckSong" target="_blank">
-            <i class="bi-box-arrow-up-right sexyglyph"></i>
-          </a>
-
         </div>
+        <a id="toTxCheckSong" target="_blank">
+          <i class="bi-box-arrow-up-right sexyglyph"></i>
+        </a>
+        <p>The event subscription callback is currently quite buggy and often does not fire. Refer to the link above to view your transaction status.</p>
       </div>
     </div>
 
@@ -90,14 +90,14 @@
                 </div>
 
                 <div class="songUrlWrapper">{{ form.url }}{{ form.song }}</div>
-                <p>You may enter the url of any MP3 file hosted online OR ou may also upload an audio file for Jukebox to host for free. (limited to 20MB)</p>
+                <p>You may enter the url of any MP3 file hosted online OR you may also upload an audio file for Jukebox to host for free. (limited to 20MB)</p>
                 <div class="songUrlWrapper">{{ form.coverUrl }}{{ form.covfile }}</div>
                 <p>Please enter the url of the cover image for this track. Base64 encoded images are not supported.</p>
                 {{ form.duration }}
                 <div>
                   <p style="margin-bottom: 10px;">Please enter the duration in number of blocks. You may want to round up to ensure the entirity of your song is heard. Some blocks are mined sooner and later than others. The average block time is <b>15s</b></p>
                   <p>The queue is currently <b id="queueDepthLabel"></b> songs long. The price for adding a song at this queue length is <b id="queueLengthPrice"></b></p>
-                  <p>Your song is <b id="activeDuration">0</b> blocks long. The price for this duration is <b id="activeDurationPrice">Ξ0</b><a class="colorfulLink" href="faq" style="padding-left: 30px;">Fee Pricing</a></p>
+                  <p>Your song is <b id="activeDuration">0</b> blocks long. The price for this duration is <b id="activeDurationPrice">Ξ0</b><a class="colorfulLink" href="economics" style="padding-left: 30px;">Fee Pricing</a></p>
 
                   <p>Your total fee is <b id="totalFeeLabel"></b></p>
                   <div style="position: relative;">
@@ -137,7 +137,7 @@
                 </div>
                 <h3 style="font-size: {{ song.artist|fontSizeFromString }}">Artist: {{ song.artist }}</h3>
                 <h4>Publisher: <a class="colorfulLink" href="https://etherscan.io/address/{{ publisherAddress }}" target="_blank">{{ song.publisher|makeShorterAddy }}</a></h4>
-                <audio controls autoplay>
+                <audio id="audio" controls autoplay>
                   <source src="{{ song.url }}" type="audio/mp3">
                 </audio>
               </div>
@@ -330,9 +330,9 @@
         url: 'getQueueLength',
         success: function(data) {
           queueDepthLabel.innerHTML = data;
-          queueLengthPrice.innerHTML = "Ξ" + (data/5000);
+          queueLengthPrice.innerHTML = "Ξ" + ((data*2)/10000);
           var duration = parseInt(durationLabel.innerHTML);
-          totalFeeLabel.innerHTML = "Ξ" + ((duration * duration / 50000) + (data/5000));
+          totalFeeLabel.innerHTML = "Ξ" + (((duration * duration * 2) / 100000) + ((data * 2)/10000));
         },
         failure: function(data) {
           queueDepthLabel.innerHTML = "Error";
@@ -388,10 +388,11 @@
         }
       }
       var price = ((duration*duration)/50000);
-      var total = price + (queueDepth/5000);
+      var total = parseFloat(price + (queueDepth/5000)).toFixed(5);
+      total = total * 1;
       durationLabel.innerHTML = duration;
       durationPriceLabel.innerHTML = "Ξ" + price;
-      totalFeeLabel.innerHTML = "Ξ" + total;
+      totalFeeLabel.innerHTML = "Ξ" + total.toString();
     }
 
     </script>
@@ -426,25 +427,15 @@
         var token = "{{ csrf_token }}";
         var form = $('form')[0];
         var formData = new FormData(form);
-        //formData.append('title', $("#id_title").val());
-        //formData.append('artist', $("#id_artist").val());
-        //formData.append('url', $("#id_url").val());
-        //formData.append('coverUrl', $("#id_coverUrl").val());
-        //formData.append("duration", $("#id_duration").val());
-        formData.append("value", parseInt(parseFloat(document.getElementById("totalFeeLabel").innerHTML.substring(1)) * 1000000000000000000));
-        //formData.append("file", document.getElementById("id_song").files[0]);
-        //formData.append("covfile", document.getElementById("id_song").files[0]);
+        var value = parseInt(parseFloat(document.getElementById("totalFeeLabel").innerHTML.substring(1)) * 1000000000000000000);
+        console.log(value);
+        var valstring = value.toString();
+        if (valstring.charAt(valstring.length-1) != '0') { // Fix bad math
+          valstring = valstring.replace(/.$/,"0")
+        }
+        console.log(parseInt(valstring));
+        formData.append("value", parseInt(valstring));
         formData.append('csrfmiddlewaretoken', token);
-        /*var formData = {
-          title: $("#id_title").val(),
-          artist: $("#id_artist").val(),
-          url: $("#id_url").val(),
-          coverUrl: $("#id_coverUrl").val(),
-          duration: $("#id_duration").val(),
-          value: parseInt(parseFloat(document.getElementById("totalFeeLabel").innerHTML.substring(1)) * 1000000000000000000),
-          file: document.getElementById("id_song").files[0],
-          csrfmiddlewaretoken: token,
-        };*/
 
         var data = "";
         const address = "{{ addy }}";
@@ -497,6 +488,7 @@
 
     <!-- Block Number -->
     <script>
+      var hasAlreadySkipped = false;
       function setProgress(currentBlock) {
         var elem = document.getElementById("progressBar");
         if (typeof(elem) == 'undefined' || elem == null) {
@@ -506,6 +498,14 @@
         var end = {{ song.end }};
         var percentage = ((currentBlock - start) / (end - start)) * 100;
         elem.style.width = percentage + "%";
+
+        if (!hasAlreadySkipped) {
+          //AUTOSCRUB !
+          percentage = percentage / 100;
+          var audioelement = document.getElementById('audio');
+          audioelement.currentTime = percentage * audioelement.duration;
+          hasAlreadySkipped = true;
+        }
       }
 
       setInterval(function(){

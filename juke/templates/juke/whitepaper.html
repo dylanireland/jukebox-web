@@ -1,0 +1,102 @@
+{% load static %}
+{% load tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jukebox</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/etc.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+    @font-face {
+      font-family: 'Alata'; /* IE9 Compat Modes */
+      src: url("{% static 'fonts/alata-regular.ttf' %}") format('truetype'); /* Safari, Android, iOS */
+    }
+    </style>
+    <!-- favicons -->
+      <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+      <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
+      <link rel="mask-icon" href="{% static 'favicons/safari-pinned-tab.svg' %}" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#00aba9">
+      <meta name="theme-color" content="#ffffff">
+    <!-- end favi -->
+  </head>
+  <body style="font-family: 'Alata', Fallback, sans-serif;">
+    <header class="header">
+  	   <h1 class="logo"><a href="/" style="font-size: 2rem;"><img src="{% static 'photos/logo.svg' %}" alt="Jukebox Logo"><div id="jukeboxName">Jukebox</div></a></h1>
+       <ul class="main-nav">
+       </ul>
+    </header>
+    <div class="container display whitepaper">
+      <div>
+        <span><h1>Jukebox</h1><p class="pl10">beta</p></span>
+        <h2>A Decentralized Music Streaming and Sharing Platform</h2>
+        <div id="abstract">
+          <h3>Abstract</h3>
+          <p>Using traditional streaming services, many artists have trouble obtaining exposure because they have no conduit with which to introduce listeners to their content. Likewise, music listeners often run out of music to listen to and actively search for songs and artists they may enjoy. Jukebox was developed with these notions in mind, and exhibits protocols that incentivize both publishers and listeners to use the platform.</p>
+        </div>
+
+        <div class="sect">
+          <h2>1 Introduction</h2>
+          <p>&emsp;&emsp;Jukebox is a decentralized web application built on the Ethereum blockchain. Jukebox’s core purpose promotes exclusivity in that there will only ever be one “station” where all listeners hear the same songs regardless of location, time zone, or other factors. Adding a song involves making payment in Ether to reserve a time slot (see <b>Publishing Songs</b>). Listening on the other hand is entirely free, and does not require a user to sign in to their wallet.</p>
+        </div>
+
+        <div class="sect">
+          <h2>2 Publishing Songs</h2>
+          <p>&emsp;&emsp;When adding a song to Jukebox it will be placed last on the queue and given a block interval during which all listeners on the platform will hear it. The song will play for the duration of the block interval, beginning on the start block number, and ending on the transition to the end block number. At which point the next song in queue is played. If there are no songs left on the queue, the station goes silent until a user publishes a song. If this event occurs, the first song to be added to the dead queue will have a fee of zero Ether (for queue length fee calculation).</p>
+          <p>&emsp;&emsp;In order to create a service that increases in exclusivity as demand for playing time grows, fees were introduced such that the higher the demand becomes, the more expensive it will be to add to the queue.</p>
+          <p>&emsp;&emsp;Fees are calculated to take into account supply and demand and establish a healthy average queue length over time. The following variables affect the publishing fee:</p>
+          <p>&emsp;&emsp;&emsp;&emsp;&bull; Length of Queue (LoQ) at publish time.</p>
+          <p>&emsp;&emsp;&emsp;&emsp;&bull; Duration of Song (in blocks).</p>
+          <p>&emsp;&emsp;The fee cost in terms of Ether can be obtained from the equation: f(x) = x<sup>2</sup>/50000 + q/5000 where <i>x</i> equals the duration of the song represented by a block interval, and <i>q</i> is the current queue length.</p>
+          <p>&emsp;&emsp;Under ideal conditions, the market should find an equilibrium where time taken to finish a given song matches that of the demand for the last spot in queue.</p>
+        </div>
+
+        <div class="sect">
+          <h2>3 Listening</h2>
+          <p>&emsp;&emsp;Listening to songs on the Jukebox application is simple, free, and relies only on frontend logic to stream the queue. There is only one queue of songs, meaning everyone that is active at the same time will be listening to the same content.</p>
+          <p>&emsp;&emsp;To listen to Jukebox, one must simply visit the Jukebox application and press play; their browser will make a request to the Ethereum node in order to acquire queue data which is then parsed and played through the browser.</p>
+          <p>&emsp;&emsp;Because the Jukebox smart contract can be interacted with publicly and from any wallet address, it is not necessary to add songs or stream music from the Jukebox application. As long as fee calculations are correct, one can build a transaction from scratch and execute it against the Jukebox smart contract to add a song, or can make free calls in order to read and stream queue data. With this in mind, it is entirely possible for entities to create entire applications that interact solely or partially with Jukebox’s backend. This further promotes decentralization and exclusivity.</p>
+        </div>
+
+        <div class="sect">
+          <h2>4 Tokenomics</h2>
+          <p>&emsp;&emsp;While Jukebox does not currently have its own native token, it will in an upcoming release (v2); the <i>JUK</i> token will be a fungible token as defined by the ERC-20 standard. Upon this release, all fees will be denominated in and paid for using the JUK token. Once paid in fee, 100% of the fee as part of the transaction will be burned, raising the value of all other existing tokens by the amount burned. This incentivizes holding JUK tokens on the fundamental principle that they will be used to pay for fees and will ever decrease in circulating supply.</p>
+          <p>&emsp;&emsp;Currently, in Jukebox beta and through Jukebox v1, fees will be denominated in and paid for using Ether. Once v2 is released, this Ether will be pooled with JUK tokens to establish a base price for the token. A large portion of the initial supply of JUK tokens will be distributed to previous song-publishing users of the platform in the form of a token airdrop. The exact and entire token distribution will be announced with the release of v1 (non-beta).</p>
+        </div>
+
+        <div class="sect">
+          <h2>5 Future Work</h2>
+          <p>&emsp;&emsp;There are many plans to improve the efficiency, usefulness, and overall value of the Jukebox platform. The following is a list of the planned upgrades in order of intended chronological release:</p>
+          <p>&emsp;&emsp;&bull; JUK token</p>
+          <p>&emsp;&emsp;See <b>Tokenomics</b></p>
+          <br>
+          <p>&emsp;&emsp;&bull; Governance</p>
+          <p>&emsp;&emsp;In Jukebox v2, JUK token holders will be able to vote on changes to the protocol / application.</p>
+          <br>
+          <p>&emsp;&emsp;&bull; NFT Based Time Slots</p>
+          <p>&emsp;&emsp;In Jukebox v2, time slots will be able to be bought and sold as NFTs.</p>
+          <br>
+          <p>&emsp;&emsp;&bull; Decentralized Content Moderation</p>
+          <p>&emsp;&emsp;Sometime in the future, Jukebox will include decentralized content moderation, likely with the help of artificial intelligence. This does not currently have an estimated arrival date as it is still common for AI to fail at auditory and visual classification challenges.</p>
+        </div>
+
+        <p>This paper is not exhaustive and Jukebox is still in active development.</p>
+
+        <h2>Made with <i class="bi bi-heart-fill sexyglyph"></i> by Dylan Ireland</h2>
+      </div>
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  </body>
+</html>

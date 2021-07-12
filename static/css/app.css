@@ -221,15 +221,30 @@ th, td {
 #checkSongPopup .modal-content > div {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 #checkSongPopup h1 {
   font-size: 2rem;
 }
 
+#checkSongPopup #toTxCheckSong {
+  margin: auto;
+}
+
 #checkSongPopup #toTxCheckSong i {
-  font-size: 1.5rem;
+  font-size: 10rem;
+}
+
+#checkSongPopup #toTxCheckSong i::before {
+  vertical-align: -.1em;
+}
+
+#checkSongPopup p {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin: auto;
 }
 
 #submitAddSong {
@@ -282,15 +297,15 @@ th, td {
 
 #checkOnSongLoaderCont {
   visibility: visible;
-  width: 100px;
-  height: 100px;
+  width: 30px;
+  height: 30px;
   position: static;
   transform: none;
-  margin-right: 20px;
+  margin-left: 10px;
 }
 
 #checkOnSongLoader {
-  border-width: 10px;
+  border-width: 5px;
 }
 
 
@@ -406,6 +421,14 @@ th, td {
   .loaderCont {
     width: 15px;
     height: 15px;
+  }
+
+  #checkSongPopup .modal-content {
+    width: 90%;
+  }
+
+  #checkSongPopup .modal-content > div {
+    align-items: flex-start;
   }
 
   #metamaskLogo {

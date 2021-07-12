@@ -7,5 +7,5 @@ class AddSongForm(forms.Form):
     artist = forms.CharField(label = "Song Artist", widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder': 'Song Artist'}))
     duration = forms.IntegerField(label = "Duration", widget=forms.NumberInput(attrs={'class' : 'form-control', 'placeholder': 'Duration (Blocks)', 'oninput': 'durationChanged(this.value);'}))
     value = forms.IntegerField(label = "Value")
-    song = forms.FileField(allow_empty_file=True)
-    covfile = forms.FileField(allow_empty_file=True)
+    song = forms.FileField(allow_empty_file=True, required = False)
+    covfile = forms.FileField(allow_empty_file=True, required = False)

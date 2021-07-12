@@ -247,3 +247,88 @@ th, td {
     padding-left: 40px;
   }
 }
+
+/* WHITEPAPER */
+
+.whitepaper {
+  margin-bottom: 50px;
+}
+
+.whitepaper > div {
+  padding-bottom: 20px;
+}
+
+.whitepaper > div {
+  max-width: 60%;
+  margin: auto;
+  padding-top: 20px;
+}
+
+.whitepaper span {
+  white-space: nowrap;
+}
+
+.whitepaper span > * {
+  display: inline-block;
+}
+
+.whitepaper p {
+  padding: 0;
+}
+
+.whitepaper h1 {
+  font-size: 2.5rem;
+}
+
+.whitepaper h3 {
+  font-size: 1.25rem;
+}
+
+.whitepaper h1, .whitepaper h2, .whitepaper h3 {
+  margin: 0;
+}
+
+.whitepaper .pl10 {
+  padding-left: 10px;
+}
+
+.whitepaper #abstract {
+  margin: auto;
+  margin-top: 30px;
+  text-align: justify;
+  margin-bottom: 150px;
+}
+
+.whitepaper #abstract > h3 {
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+.whitepaper .sect {
+  text-align: justify;
+  margin-bottom: 50px;
+}
+
+.whitepaper .sect > h2 {
+  text-align: left;
+  padding-bottom: 5px;
+}
+
+.whitepaper > div > p {
+  font-size: 0.8rem;
+  color: #222;
+}
+
+.sexyglyph {
+  background: url("../photos/gradient.png") no-repeat center center;
+  background-size: 100%;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@media (max-width: 767px) {
+  .whitepaper > div {
+    max-width: 100%;
+  }
+}
