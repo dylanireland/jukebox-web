@@ -1,0 +1,334 @@
+body {
+  min-height: 100vh;
+  background-image: url('../photos/renaissancemusicians.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.85), rgba(255,255,255,0.85), rgba(255,255,255,1));
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.45em;
+}
+
+.logo img {
+  width: 70px;
+}
+
+.logo a, .main-nav a {
+   padding: 10px 15px;
+   text-align: center;
+   display: block;
+   text-decoration: none;
+   color: #FFF;
+}
+
+.header {
+  background-color: transparent;
+  position: relative;
+}
+
+.main-nav > li, .logo > a {
+  white-space: nowrap;
+}
+ .header,
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+}
+ul.main-nav {
+  margin-right: 0px;
+}
+.header {
+  padding-bottom: 20px;
+  align-items: center;
+  .header {
+      width: 80%;
+      margin: 0 auto;
+      max-width: 1150px;
+  }
+}
+
+#jukeboxName, .colorfulLink {
+  position: relative;
+  background: url('../photos/sexyLink.png') no-repeat center center;
+  background-size: 100%;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline;
+  transition-duration: 0.5s;
+}
+
+#jukeboxName:hover, .colorfulLink:hover {
+  text-decoration: none;
+  color: transparent;
+  background: url("../photos/sexyLink180.png") no-repeat center center;
+  background-size: 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.display {
+  border-radius: 10px;
+  background-color: white;
+  margin: auto;
+  width: 80vw;
+  max-width: 80vw;
+  min-height: 80vh;
+  text-align: center;
+  position: relative;
+}
+
+.display > h1 {
+  margin: auto;
+  padding-top: 10px;
+}
+
+.display p {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.display img {
+  width: 100%;
+}
+
+.mobile > div {
+  margin-top: 20px;
+}
+
+.mobile, .desktop {
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .mobile {
+    display: block;
+  }
+  .desktop {
+    display: none;
+  }
+
+  .display {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+
+  .display p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile {
+    display: none;
+  }
+  .desktop {
+    display: block;
+  }
+  .display {
+    padding: 15px 20px;
+  }
+}
+
+/* QUEUE */
+#queueWrapper {
+  padding-top: 30px;
+  max-width: 50%;
+  margin: auto;
+}
+
+#queue {
+  width: 100%;
+}
+
+#queueNameBox {
+  border: 1px solid black;
+  border-bottom: 0px;
+}
+
+#queueNameBox > h4 {
+  margin: 0;
+  padding: 5px 0px 5px 0px;
+}
+
+#queue, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 3px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+
+  .logo img {
+    width: 10vw;
+  }
+
+  #jukeboxName {
+    font-size: 5vw;
+  }
+
+  .colorfulLink {
+    white-space: nowrap;
+  }
+
+  #queueWrapper {
+    max-width: 100%;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  th, td {
+    font-size: 0.7rem;
+  }
+}
+
+/* FUTURE WORK */
+
+.futurework > h1 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.futurework .col-6 {
+  margin-bottom: 10px;
+}
+
+.futureworkcontainer {
+  padding: 25px;
+  background-color: #eee;
+  margin: auto;
+  max-width: 80%;
+  border-radius: 25px;
+  text-align: left;
+}
+
+.futureworkcontainer p {
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .futureworkcontainer .row {
+    flex-direction: column;
+    align-content: center;
+  }
+
+  .futureworkcontainer .row .col-6 {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .pl40 {
+    padding-left: 40px;
+  }
+}
+
+/* WHITEPAPER */
+
+.whitepaper {
+  margin-bottom: 50px;
+}
+
+.whitepaper > div {
+  padding-bottom: 20px;
+}
+
+.whitepaper > div {
+  max-width: 60%;
+  margin: auto;
+  padding-top: 20px;
+}
+
+.whitepaper span {
+  white-space: nowrap;
+}
+
+.whitepaper span > * {
+  display: inline-block;
+}
+
+.whitepaper p {
+  padding: 0;
+}
+
+.whitepaper h1 {
+  font-size: 2.5rem;
+}
+
+.whitepaper h3 {
+  font-size: 1.25rem;
+}
+
+.whitepaper h1, .whitepaper h2, .whitepaper h3 {
+  margin: 0;
+}
+
+.whitepaper .pl10 {
+  padding-left: 10px;
+}
+
+.whitepaper #abstract {
+  margin: auto;
+  margin-top: 30px;
+  text-align: justify;
+  margin-bottom: 150px;
+}
+
+.whitepaper #abstract > h3 {
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+.whitepaper .sect {
+  text-align: justify;
+  margin-bottom: 50px;
+}
+
+.whitepaper .sect > h2 {
+  text-align: left;
+  padding-bottom: 5px;
+}
+
+.whitepaper > div > p {
+  font-size: 0.8rem;
+  color: #222;
+}
+
+.sexyglyph {
+  background: url("../photos/gradient.png") no-repeat center center;
+  background-size: 100%;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@media (max-width: 767px) {
+  .whitepaper > div {
+    max-width: 100%;
+  }
+}
