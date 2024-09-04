@@ -3,6 +3,7 @@ import logoWithExtras from "./assets/photos/logoWithExtras.svg";
 import etherscanLogo from "./assets/photos/etherscan.svg";
 import coverchain from "./assets/photos/coverchain.png";
 import "./assets/css/index.css";
+import FAQ from "./FAQ";
 
 export default function Home() {
 	return (
@@ -132,14 +133,7 @@ export default function Home() {
 					<h1>FAQ</h1>
 				</div>
 				<div className="container">
-					<div className="row">
-						<div className="col-6">
-							<h3>{/* q */}</h3>
-						</div>
-						<div className="col-6">
-							<p>{/* v */}</p>
-						</div>
-					</div>
+					<FAQ />
 				</div>
 			</div>
 
