@@ -1,7 +1,7 @@
 import express from "express";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import greenlock from "greenlock-express";
+const greenlock = await import("greenlock-express").then(module => module.default || module);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
